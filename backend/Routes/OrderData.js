@@ -5,7 +5,7 @@ const Order = require("../models/Order");
 // Route to handle order data
 router.post("/orderData", async (req, res) => {
   const { order_data, email, order_date } = req.body;
-
+  console.log(order_data);
   // Validate input
   if (!email) {
     return res.status(400).json({ success: false, message: "Email is required" });
@@ -20,7 +20,7 @@ router.post("/orderData", async (req, res) => {
     if (order_date) {
       order_data.unshift({ Order_date: order_date });
     }
-
+ 
     // Check if email already exists
     const existingOrder = await Order.findOne({ email });
 
@@ -50,7 +50,6 @@ router.post("/orderData", async (req, res) => {
 router.post("/myorderData", async (req, res) => {
   try {
     const { email } = req.body;
-
     // Validate input
     if (!email) {
       return res.status(400).json({ success: false, message: "Email is required" });

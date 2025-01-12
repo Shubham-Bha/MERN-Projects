@@ -7,7 +7,10 @@ export default function MyOrder() {
   const [darkMode, setDarkMode] = useState(true);
 
   const fetchMyOrder = async () => {
-    console.log("Fetching order data for email:", localStorage.getItem("userEmail"));
+    console.log(
+      "Fetching order data for email:",
+      localStorage.getItem("userEmail")
+    );
     try {
       const response = await fetch("http://localhost:5000/api/myorderData", {
         method: "POST",
@@ -18,7 +21,6 @@ export default function MyOrder() {
           email: localStorage.getItem("userEmail"),
         }),
       });
-      console.log(response);
       if (!response.ok) {
         throw new Error("Failed to fetch order data");
       }
@@ -74,8 +76,12 @@ export default function MyOrder() {
           <div className="card-body">
             <h5 className="card-title">{orderItem.name || "No Name"}</h5>
             <p className="card-text">
-              <span className="badge bg-secondary me-2">Qty: {orderItem.qty}</span>
-              <span className="badge bg-info text-dark me-2">Size: {orderItem.size}</span>
+              <span className="badge bg-secondary me-2">
+                Qty: {orderItem.qty}
+              </span>
+              <span className="badge bg-info text-dark me-2">
+                Size: {orderItem.size}
+              </span>
               <span className="badge bg-primary">₹{orderItem.price}</span>
             </p>
           </div>
@@ -85,29 +91,37 @@ export default function MyOrder() {
   };
 
   const renderGroupedOrders = () => {
-    if (!orderData || !Array.isArray(orderData.order_data) || orderData.order_data.length === 0) {
+    if (
+      !orderData ||
+      !Array.isArray(orderData.order_data) ||
+      orderData.order_data.length === 0
+    ) {
       return <p className="text-center text-muted">No orders found.</p>;
     }
 
     const groupedItems = groupItemsByDate(orderData.order_data);
 
     if (Object.keys(groupedItems).length === 0) {
-      return <p className="text-center text-muted">No valid order data found.</p>;
+      return (
+        <p className="text-center text-muted">No valid order data found.</p>
+      );
     }
 
     return Object.entries(groupedItems).map(([date, items], index) => (
       <div key={`date-${index}`} className="mb-5">
         <h4 className="text-primary">{formatDate(date)}</h4>
         <hr />
-        <div className="row">
-          {renderOrderItems(items)}
-        </div>
+        <div className="row">{renderOrderItems(items)}</div>
       </div>
     ));
   };
 
   return (
-    <div className={`min-vh-100 ${darkMode ? "bg-dark text-light" : "bg-light text-dark"}`}>
+    <div
+      className={`min-vh-100 ${
+        darkMode ? "bg-dark text-light" : "bg-light text-dark"
+      }`}
+    >
       <Navbar />
       <div className="container mt-4">
         <button

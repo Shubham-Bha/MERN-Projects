@@ -26,7 +26,6 @@ export default function Home() {
       }
 
       response = await response.json();
-      console.log(response);
       let Data = response.data
       setFoodItems(Data.foodItems);
       setFoodCat(Data.foodCategories);
