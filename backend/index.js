@@ -9,7 +9,7 @@ mongoDb();
 
 // Define allowed origins
 const allowedOrigins = [
-  'https://foodaapfrontend.onrender.com',
+  'https://gofood-frontend-fme9.onrender.com',
   'http://localhost:3000' // Development
 ];
 
