@@ -15,18 +15,12 @@ const allowedOrigins = [
 
 // Configure CORS
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log("Done by scam");
-      callback(null, true);
-    }
-  },
+  origin: '*', // Allow all origins for debugging purposes
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
   credentials: true, // Allow cookies if necessary
 }));
+
 
 // Handle preflight requests explicitly
 app.options('*', (req, res) => {
