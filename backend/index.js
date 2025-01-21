@@ -10,7 +10,7 @@ mongoDb();
 // Define allowed origins
 const allowedOrigins = [
   'https://gofood-frontend-fme9.onrender.com',
-  'http://localhost:3000' // Development
+  'http://localhost:3000', // Development
 ];
 
 // Configure CORS
@@ -19,18 +19,32 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.error(`Blocked by CORS: Origin ${origin}`);
+      callback(new Error(`CORS error: Origin ${origin} not allowed`));
     }
-  }, 
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+  credentials: true, // Allow cookies if necessary
 }));
 
-// Handle preflight requests for all routes
-app.options('*', cors()); // Enable CORS for all routes
+// Handle preflight requests explicitly
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(204);
+});
 
 // Middleware to parse JSON requests
 app.use(express.json());
+
+// Logging requests
+app.use((req, res, next) => {
+  console.log(`Request received: ${req.method} ${req.url} from origin ${req.headers.origin}`);
+  next();
+});
 
 // Routes
 app.use('/api', require('./Routes/CreateUser'));
@@ -44,8 +58,8 @@ app.get('/', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong!');
+  console.error('Error encountered:', err.message);
+  res.status(500).send({ error: err.message || 'Something went wrong!' });
 });
 
 // Start server
