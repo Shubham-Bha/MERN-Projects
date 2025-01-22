@@ -17,7 +17,8 @@ export default function Home() {
       let response = await fetch("https://gofood-cgi0.onrender.com/api/foodData", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Origin': 'https://gofood-frontend-fme9.onrender.com',
         }
       });
 

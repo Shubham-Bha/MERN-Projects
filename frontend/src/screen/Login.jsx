@@ -19,7 +19,8 @@ export default function Login() {
       const response = await fetch("https://gofood-cgi0.onrender.com/api/login", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Origin': 'https://gofood-frontend-fme9.onrender.com'
         },
         body: JSON.stringify({ email: credentials.email, password: credentials.password })
       });

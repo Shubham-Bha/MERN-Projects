@@ -13,7 +13,8 @@ export default function SignUp() {
             const response = await fetch("https://gofood-cgi0.onrender.com/api/createuser", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Origin': 'https://gofood-frontend-fme9.onrender.com'
                 },
                 body: JSON.stringify({ name: credentials.name, email: credentials.email, password: credentials.password, location: credentials.geolocation })
             });
