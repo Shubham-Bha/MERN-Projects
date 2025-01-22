@@ -9,21 +9,24 @@ mongoDb();
 
 // Define allowed origins
 const allowedOrigins = [
-  'https://foodaapfrontend.onrender.com',
-  'http://localhost:3000' // Development
+  'https://gofood-frontend-fme9.onrender.com',
+  'http://localhost:3000', // Development
 ];
 
-// Configure CORS
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    console.log('Origin:', origin);  // Log for debugging
+
+    // Allow requests with no Origin or if the Origin is in the allowedOrigins list
+    if (!origin || allowedOrigins.includes(origin) || origin === undefined) {
+      callback(null, true); // Allow the request
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS')); // Block the request
     }
-  }, 
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+  credentials: true,
 }));
 
 // Handle preflight requests for all routes
