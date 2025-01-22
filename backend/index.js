@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -7,33 +6,34 @@ const port = process.env.PORT || 5000;
 const mongoDb = require('./db');
 mongoDb();
 
-// Define allowed origins
-const allowedOrigins = [
-  'https://gofood-frontend-fme9.onrender.com',
-  'http://localhost:3000', // Development
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    console.log('Origin:', origin);  // Log for debugging
-
-    // Allow requests with no Origin or if the Origin is in the allowedOrigins list
-    if (!origin || allowedOrigins.includes(origin) || origin === undefined) {
-      callback(null, true); // Allow the request
-    } else {
-      callback(new Error('Not allowed by CORS')); // Block the request
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
-  credentials: true,
-}));
-
-// Handle preflight requests for all routes
-app.options('*', cors()); // Enable CORS for all routes
-
 // Middleware to parse JSON requests
 app.use(express.json());
+
+// CORS configuration
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://gofood-frontend-fme9.onrender.com', // Your deployed frontend
+    'http://localhost:3000' // Local development
+  ];
+
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin); // Echo the origin
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins (or restrict)
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // If you're using cookies
+
+  // Handle OPTIONS preflight request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  next();
+});
 
 // Routes
 app.use('/api', require('./Routes/CreateUser'));
