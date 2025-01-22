@@ -20,7 +20,7 @@ export default function Login() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Origin': 'https://gofood-frontend-fme9.onrender.com'
+          'origin': 'https://gofood-frontend-fme9.onrender.com',
         },
         body: JSON.stringify({ email: credentials.email, password: credentials.password })
       });
